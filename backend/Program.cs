@@ -76,5 +76,5 @@ app.MapPost("/api/recalculate", async (HttpRequest request, IHttpClientFactory h
 });
 
 // Dynamic port for Railway
-var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 app.Run($"http://0.0.0.0:{port}");

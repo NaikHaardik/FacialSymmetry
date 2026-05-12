@@ -40,8 +40,8 @@ app.MapPost("/api/analyze", async (HttpRequest request, IHttpClientFactory httpC
 
     try
     {
-        var response = await client.PostAsync("http://localhost:8000/analyze", content);
-        var result = await response.Content.ReadAsStringAsync();
+        var pythonUrl = Environment.GetEnvironmentVariable("PYTHON_SERVICE_URL") ?? "http://localhost:8000";
+var response = await client.PostAsync($"{pythonUrl}/analyze", content);
         return Results.Content(result, "application/json");
     }
     catch (Exception ex)
@@ -60,8 +60,8 @@ app.MapPost("/api/recalculate", async (HttpRequest request, IHttpClientFactory h
 
     try
     {
-        var response = await client.PostAsync("http://localhost:8000/recalculate", content);
-        var result = await response.Content.ReadAsStringAsync();
+var pythonUrl = Environment.GetEnvironmentVariable("PYTHON_SERVICE_URL") ?? "http://localhost:8000";
+var response = await client.PostAsync($"{pythonUrl}/recalculate", content);        var result = await response.Content.ReadAsStringAsync();
         return Results.Content(result, "application/json");
     }
     catch (Exception ex)

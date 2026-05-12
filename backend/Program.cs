@@ -38,10 +38,13 @@ app.MapPost("/api/analyze", async (HttpRequest request, IHttpClientFactory httpC
     using var content = new MultipartFormDataContent();
     content.Add(new StreamContent(ms), "file", file.FileName);
 
+    var pythonUrl = Environment.GetEnvironmentVariable("PYTHON_SERVICE_URL") 
+                    ?? "http://localhost:8000";
+
     try
     {
-        var pythonUrl = Environment.GetEnvironmentVariable("PYTHON_SERVICE_URL") ?? "http://localhost:8000";
-var response = await client.PostAsync($"{pythonUrl}/analyze", content);
+        var response = await client.PostAsync($"{pythonUrl}/analyze", content);
+        var result = await response.Content.ReadAsStringAsync();
         return Results.Content(result, "application/json");
     }
     catch (Exception ex)
@@ -56,12 +59,16 @@ app.MapPost("/api/recalculate", async (HttpRequest request, IHttpClientFactory h
     var body = await reader.ReadToEndAsync();
 
     var client = httpClientFactory.CreateClient();
+
+    var pythonUrl = Environment.GetEnvironmentVariable("PYTHON_SERVICE_URL") 
+                    ?? "http://localhost:8000";
+
     using var content = new StringContent(body, System.Text.Encoding.UTF8, "application/json");
 
     try
     {
-var pythonUrl = Environment.GetEnvironmentVariable("PYTHON_SERVICE_URL") ?? "http://localhost:8000";
-var response = await client.PostAsync($"{pythonUrl}/recalculate", content);        var result = await response.Content.ReadAsStringAsync();
+        var response = await client.PostAsync($"{pythonUrl}/recalculate", content);
+        var result = await response.Content.ReadAsStringAsync();
         return Results.Content(result, "application/json");
     }
     catch (Exception ex)
@@ -72,4 +79,4 @@ var response = await client.PostAsync($"{pythonUrl}/recalculate", content);     
 
 app.MapFallbackToFile("index.html");
 
-app.Run("http://localhost:5000");
+app.Run("http://0.0.0.0:5000");

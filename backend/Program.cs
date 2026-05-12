@@ -12,8 +12,6 @@ builder.Services.AddHttpClient();
 var app = builder.Build();
 
 app.UseCors();
-app.UseDefaultFiles();
-app.UseStaticFiles();
 
 app.MapGet("/api/health", () => Results.Ok(new { status = "backend running" }));
 
@@ -38,7 +36,7 @@ app.MapPost("/api/analyze", async (HttpRequest request, IHttpClientFactory httpC
     using var content = new MultipartFormDataContent();
     content.Add(new StreamContent(ms), "file", file.FileName);
 
-    var pythonUrl = Environment.GetEnvironmentVariable("PYTHON_SERVICE_URL") 
+    var pythonUrl = Environment.GetEnvironmentVariable("PYTHON_SERVICE_URL")
                     ?? "http://localhost:8000";
 
     try
@@ -60,7 +58,7 @@ app.MapPost("/api/recalculate", async (HttpRequest request, IHttpClientFactory h
 
     var client = httpClientFactory.CreateClient();
 
-    var pythonUrl = Environment.GetEnvironmentVariable("PYTHON_SERVICE_URL") 
+    var pythonUrl = Environment.GetEnvironmentVariable("PYTHON_SERVICE_URL")
                     ?? "http://localhost:8000";
 
     using var content = new StringContent(body, System.Text.Encoding.UTF8, "application/json");
@@ -77,6 +75,6 @@ app.MapPost("/api/recalculate", async (HttpRequest request, IHttpClientFactory h
     }
 });
 
-app.MapFallbackToFile("index.html");
-
-app.Run("http://0.0.0.0:5000");
+// Dynamic port for Railway
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+app.Run($"http://0.0.0.0:{port}");

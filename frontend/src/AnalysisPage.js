@@ -2,8 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
 const abs = Math.abs;
-const BACKEND_URL = "";
-
+const BACKEND_URL = "https://determined-benevolence-production-0da6.up.railway.app";
 const MetricCard = ({ label, value, unit, color }) => (
   <div style={{
     background: "#1a1a2e",
